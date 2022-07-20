@@ -7,7 +7,9 @@ authors = ["Francisco Calderón <fjcalderon@gmail.com>"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+chrono = "0.4.19"
 dotenv = "0.15.0"
+futures = "0.3.21"
 mongodb = "2.2.2"
 rocket = "0.5.0-rc.2"
 serde = "1.0.139"
