@@ -7,9 +7,8 @@ extern crate serde_json;
 pub mod db;
 pub mod routes;
 
-use futures::TryFutureExt;
-use mongodb::{bson::doc, options::FindOptions};
-use mongodb::{error::Error, Collection};
+use mongodb::bson::doc;
+use rocket_governor::rocket_governor_catcher;
 
 use routes as api_routes;
 
@@ -53,5 +52,7 @@ async fn rocket() -> _ {
         .unwrap()
         .unwrap();
     println!("{order:?}");
-    rocket::build().mount("/", routes![api_routes::index])
+    rocket::build()
+        .mount("/", routes![api_routes::index])
+        .register("/", catchers!(rocket_governor_catcher))
 }
