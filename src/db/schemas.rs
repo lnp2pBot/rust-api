@@ -1,6 +1,5 @@
-use mongodb::bson;
-use mongodb::bson::DateTime;
 use serde::{Deserialize, Serialize};
+use mongodb::bson::{oid::ObjectId, DateTime};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub enum ChannelType {
@@ -27,7 +26,7 @@ pub struct OrderChannel {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Community {
-    _id: bson::oid::ObjectId,
+    _id: ObjectId,
     name: String,
     creator_id: String,
     order_channels: Vec<OrderChannel>,
@@ -37,7 +36,7 @@ pub struct Community {
     orders_to_redeem: Option<f32>,
     dispute_channel: String,
     solvers: Vec<UsernameId>,
-    banned_users: Vec<UsernameId>,
+    banned_users: Option<Vec<UsernameId>>,
     public: bool,
     currencies: Vec<String>,
     created_at: DateTime,
@@ -45,7 +44,7 @@ pub struct Community {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct User {
-    _id: bson::oid::ObjectId,
+    _id: ObjectId,
     tg_id: String,
     username: String,
     lang: String,
