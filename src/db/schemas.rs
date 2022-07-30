@@ -1,5 +1,5 @@
+use mongodb::bson::{oid::ObjectId, serde_helpers::bson_datetime_as_rfc3339_string, DateTime};
 use serde::{Deserialize, Serialize};
-use mongodb::bson::{oid::ObjectId, DateTime};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub enum ChannelType {
@@ -39,6 +39,7 @@ pub struct Community {
     banned_users: Option<Vec<UsernameId>>,
     public: bool,
     currencies: Vec<String>,
+    #[serde(serialize_with = "bson_datetime_as_rfc3339_string::serialize")]
     created_at: DateTime,
 }
 

@@ -9,8 +9,8 @@ extern crate serde_json;
 
 use rocket_governor::rocket_governor_catcher;
 
-use routes::{index, get_communities, get_community};
 use db::mongo::DBMongo;
+use routes::{get_communities, get_community, index};
 
 #[launch]
 async fn rocket() -> _ {

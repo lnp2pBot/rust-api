@@ -1,8 +1,8 @@
-use rocket::*;
-use crate::db::schemas::Community;
-use rocket_governor::{Method, Quota, RocketGovernable, RocketGovernor};
-use rocket::{http::Status, serde::json::Json, State};
 use crate::db::mongo::DBMongo;
+use crate::db::schemas::Community;
+use rocket::*;
+use rocket::{http::Status, serde::json::Json, State};
+use rocket_governor::{Method, Quota, RocketGovernable, RocketGovernor};
 
 pub struct RateLimitGuard;
 
@@ -18,7 +18,7 @@ pub fn index(_limitguard: RocketGovernor<RateLimitGuard>) -> &'static str {
 }
 
 #[get("/communities")]
-pub fn get_communities(db: &State<DBMongo>) -> Result<Json<Vec<Community>>, Status>  {
+pub fn get_communities(db: &State<DBMongo>) -> Result<Json<Vec<Community>>, Status> {
     let comms = db.get_communities();
 
     match comms {
