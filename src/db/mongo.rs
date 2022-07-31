@@ -59,4 +59,13 @@ impl DBMongo {
 
         Ok(order.unwrap())
     }
+
+    pub fn get_orders(&self) -> Result<Vec<Order>, Error> {
+        let col = DBMongo::col::<Order>(&self, "orders");
+        let cursors = col.find(None, None).ok().expect("Error getting orders");
+
+        let orders: Vec<Order> = cursors.map(|doc| doc.unwrap()).collect();
+
+        Ok(orders)
+    }
 }

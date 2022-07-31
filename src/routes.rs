@@ -46,3 +46,13 @@ pub fn get_order(db: &State<DBMongo>, id: &str) -> Result<Json<Order>, Status> {
         Err(_) => Err(Status::InternalServerError),
     }
 }
+
+#[get("/orders")]
+pub fn get_orders(db: &State<DBMongo>) -> Result<Json<Vec<Order>>, Status> {
+    let comms = db.get_orders();
+
+    match comms {
+        Ok(o) => Ok(Json(o)),
+        Err(_) => Err(Status::InternalServerError),
+    }
+}
