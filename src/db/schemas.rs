@@ -1,5 +1,12 @@
 use mongodb::bson::{oid::ObjectId, serde_helpers::bson_datetime_as_rfc3339_string, DateTime};
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Serialize, Serializer};
+
+pub fn serialize_oid_as_string<S>(oid: &ObjectId, serializer: S) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+    serializer.serialize_str(oid.to_string().as_str())
+}
 
 #[derive(Debug, Serialize, Deserialize)]
 pub enum ChannelType {
@@ -26,7 +33,8 @@ pub struct OrderChannel {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Community {
-    _id: ObjectId,
+    #[serde(rename = "_id", serialize_with = "serialize_oid_as_string")]
+    id: ObjectId,
     name: String,
     creator_id: String,
     order_channels: Vec<OrderChannel>,
@@ -45,7 +53,8 @@ pub struct Community {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct User {
-    _id: ObjectId,
+    #[serde(rename = "_id", serialize_with = "serialize_oid_as_string")]
+    id: ObjectId,
     tg_id: String,
     username: String,
     lang: String,
@@ -61,6 +70,7 @@ pub struct User {
     lightning_address: Option<String>,
     disputes: Option<f32>,
     default_community_id: Option<String>,
+    #[serde(serialize_with = "bson_datetime_as_rfc3339_string::serialize")]
     created_at: DateTime,
 }
 
@@ -80,6 +90,8 @@ pub enum DisputeStatus {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Dispute {
+    #[serde(rename = "_id", serialize_with = "serialize_oid_as_string")]
+    id: ObjectId,
     initiator: String,
     seller_id: Option<String>,
     buyer_id: Option<String>,
@@ -87,11 +99,14 @@ pub struct Dispute {
     community_id: Option<String>,
     order_id: String,
     solver_id: Option<String>,
+    #[serde(serialize_with = "bson_datetime_as_rfc3339_string::serialize")]
     created_at: DateTime,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PendingPayment {
+    #[serde(rename = "_id", serialize_with = "serialize_oid_as_string")]
+    id: ObjectId,
     description: String,
     amount: f32,
     attempts: f32,
@@ -99,11 +114,12 @@ pub struct PendingPayment {
     is_invoice_expired: bool,
     payment_request: String,
     hash: Option<String>,
-    created_at: DateTime,
     paid_at: Option<DateTime>,
     user_id: String,
     order_id: Option<String>,
     community_id: Option<String>,
+    #[serde(serialize_with = "bson_datetime_as_rfc3339_string::serialize")]
+    created_at: DateTime,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -138,6 +154,8 @@ pub enum OrderStatus {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Order {
+    #[serde(rename = "_id", serialize_with = "serialize_oid_as_string")]
+    id: ObjectId,
     description: String,
     amount: f32,
     fee: f32,
@@ -161,7 +179,6 @@ pub struct Order {
     fiat_amount: f32,
     fiat_code: String,
     payment_method: String,
-    created_at: DateTime,
     invoice_held_at: Option<DateTime>,
     taken_at: Option<DateTime>,
     tg_chat_id: Option<String>,
@@ -174,4 +191,6 @@ pub struct Order {
     admin_warned: bool,
     paid_hold_buyer_invoice_updated: bool,
     community_id: String,
+    #[serde(serialize_with = "bson_datetime_as_rfc3339_string::serialize")]
+    created_at: DateTime,
 }
