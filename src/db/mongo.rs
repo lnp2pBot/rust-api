@@ -4,7 +4,10 @@ use mongodb::{
 };
 use std::io::Error;
 
-use crate::db::{self, schemas::Community};
+use crate::db::{
+    self,
+    schemas::{Community, Order},
+};
 
 pub struct DBMongo {
     db: Database,
@@ -43,5 +46,17 @@ impl DBMongo {
         let comms: Vec<Community> = cursors.map(|doc| doc.unwrap()).collect();
 
         Ok(comms)
+    }
+
+    pub fn get_order(&self, id: &str) -> Result<Order, Error> {
+        let id = ObjectId::parse_str(id).unwrap();
+        let filter = doc! {"_id": id };
+        let col = DBMongo::col::<Order>(&self, "orders");
+        let order = col
+            .find_one(filter, None)
+            .ok()
+            .expect("Error getting order");
+
+        Ok(order.unwrap())
     }
 }

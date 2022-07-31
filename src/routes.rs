@@ -1,5 +1,5 @@
 use crate::db::mongo::DBMongo;
-use crate::db::schemas::Community;
+use crate::db::schemas::{Community, Order};
 use rocket::*;
 use rocket::{http::Status, serde::json::Json, State};
 use rocket_governor::{Method, Quota, RocketGovernable, RocketGovernor};
@@ -30,6 +30,16 @@ pub fn get_communities(db: &State<DBMongo>) -> Result<Json<Vec<Community>>, Stat
 #[get("/community/<id>")]
 pub fn get_community(db: &State<DBMongo>, id: &str) -> Result<Json<Community>, Status> {
     let comm = db.get_community(&id);
+
+    match comm {
+        Ok(o) => Ok(Json(o)),
+        Err(_) => Err(Status::InternalServerError),
+    }
+}
+
+#[get("/order/<id>")]
+pub fn get_order(db: &State<DBMongo>, id: &str) -> Result<Json<Order>, Status> {
+    let comm = db.get_order(&id);
 
     match comm {
         Ok(o) => Ok(Json(o)),
