@@ -9,7 +9,7 @@ where
     serializer.serialize_str(oid.to_string().as_str())
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum ChannelType {
     #[serde(rename = "buy")]
     Buy,
@@ -19,20 +19,20 @@ pub enum ChannelType {
     Mixed,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct UsernameId {
     id: String,
     username: String,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct OrderChannel {
     name: String,
     #[serde(rename = "type")]
     kind: ChannelType,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Community {
     #[serde(rename = "_id", serialize_with = "serialize_oid_as_string")]
     id: ObjectId,
@@ -51,7 +51,7 @@ pub struct Community {
     created_at: DateTime,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct User {
     #[serde(rename = "_id", serialize_with = "serialize_oid_as_string")]
     id: ObjectId,
@@ -74,7 +74,7 @@ pub struct User {
     created_at: DateTime,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum DisputeStatus {
     #[serde(rename = "WAITING_FOR_SOLVER")]
     WaitingForSolver,
@@ -88,7 +88,7 @@ pub enum DisputeStatus {
     Released,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Dispute {
     #[serde(rename = "_id", serialize_with = "serialize_oid_as_string")]
     id: ObjectId,
@@ -103,7 +103,7 @@ pub struct Dispute {
     created_at: DateTime,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct PendingPayment {
     #[serde(rename = "_id", serialize_with = "serialize_oid_as_string")]
     id: ObjectId,
@@ -122,7 +122,7 @@ pub struct PendingPayment {
     created_at: DateTime,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum OrderStatus {
     #[serde(rename = "WAITING_PAYMENT")]
     WaitingPayment,
@@ -152,7 +152,7 @@ pub enum OrderStatus {
     CompletedByAdmin,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Order {
     #[serde(rename = "_id", serialize_with = "serialize_oid_as_string")]
     id: ObjectId,
@@ -177,10 +177,10 @@ pub struct Order {
     created_at: DateTime,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct OrderRequest {
-    id: Option<String>,
-    status: Option<OrderStatus>,
-    direction: Option<String>,
-    fiat_code: Option<String>,
+    pub id: Option<String>,
+    pub status: Option<OrderStatus>,
+    pub direction: Option<String>,
+    pub fiat_code: Option<String>,
 }
