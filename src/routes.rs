@@ -1,5 +1,5 @@
 use crate::db::mongo::DBMongo;
-use crate::db::schemas::{Community, Order};
+use crate::db::schemas::{Community, Order, OrderRequest};
 use rocket::*;
 use rocket::{http::Status, serde::json::Json, State};
 use rocket_governor::{Method, Quota, RocketGovernable, RocketGovernor};
@@ -47,9 +47,12 @@ pub fn get_order(db: &State<DBMongo>, id: &str) -> Result<Json<Order>, Status> {
     }
 }
 
-#[get("/orders")]
-pub fn get_orders(db: &State<DBMongo>) -> Result<Json<Vec<Order>>, Status> {
-    let comms = db.get_orders();
+#[get("/orders", format = "json", data = "<params>")]
+pub fn get_orders(
+    db: &State<DBMongo>,
+    params: Json<OrderRequest>,
+) -> Result<Json<Vec<Order>>, Status> {
+    let comms = db.get_orders(&params);
 
     match comms {
         Ok(o) => Ok(Json(o)),

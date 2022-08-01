@@ -1,3 +1,4 @@
+use crate::db::schemas::OrderRequest;
 use mongodb::{
     bson::{doc, oid::ObjectId},
     sync::{Collection, Database},
@@ -60,7 +61,8 @@ impl DBMongo {
         Ok(order.unwrap())
     }
 
-    pub fn get_orders(&self) -> Result<Vec<Order>, Error> {
+    pub fn get_orders(&self, params: &OrderRequest) -> Result<Vec<Order>, Error> {
+        println!("{params:?}");
         let col = DBMongo::col::<Order>(&self, "orders");
         let cursors = col.find(None, None).ok().expect("Error getting orders");
 

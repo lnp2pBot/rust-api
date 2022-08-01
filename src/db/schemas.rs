@@ -1,5 +1,6 @@
 use mongodb::bson::{oid::ObjectId, serde_helpers::bson_datetime_as_rfc3339_string, DateTime};
-use serde::{Deserialize, Serialize, Serializer};
+use rocket::serde::{Deserialize, Serialize};
+use serde::Serializer;
 
 pub fn serialize_oid_as_string<S>(oid: &ObjectId, serializer: S) -> Result<S::Ok, S::Error>
 where
@@ -162,7 +163,7 @@ pub struct Order {
     community_fee: Option<f32>,
     status: OrderStatus,
     #[serde(rename = "type")]
-    order_type: String,
+    direction: String,
     fiat_amount: Option<f32>,
     fiat_code: String,
     payment_method: String,
@@ -174,4 +175,12 @@ pub struct Order {
     price_margin: f32,
     #[serde(serialize_with = "bson_datetime_as_rfc3339_string::serialize")]
     created_at: DateTime,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct OrderRequest {
+    id: Option<String>,
+    status: Option<OrderStatus>,
+    direction: Option<String>,
+    fiat_code: Option<String>,
 }
