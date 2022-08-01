@@ -1,6 +1,6 @@
 use crate::db::schemas::OrderRequest;
 use mongodb::{
-    bson::{doc, oid::ObjectId},
+    bson::{self, doc, oid::ObjectId, Document},
     sync::{Collection, Database},
 };
 use std::io::Error;
@@ -62,9 +62,22 @@ impl DBMongo {
     }
 
     pub fn get_orders(&self, params: &OrderRequest) -> Result<Vec<Order>, Error> {
-        println!("{params:?}");
+        let mut filter = Document::new();
+        if let Some(id) = &params.id {
+            let id = ObjectId::parse_str(id).unwrap();
+            filter.insert("_id", id);
+        }
+        if let Some(status) = &params.status {
+            filter.insert("status", bson::to_bson(&status).unwrap());
+        }
+        if let Some(d) = &params.direction {
+            filter.insert("type", d);
+        }
+        if let Some(fiat) = &params.fiat_code {
+            filter.insert("fiat_code", fiat);
+        }
         let col = DBMongo::col::<Order>(&self, "orders");
-        let cursors = col.find(None, None).ok().expect("Error getting orders");
+        let cursors = col.find(filter, None).ok().expect("Error getting orders");
 
         let orders: Vec<Order> = cursors.map(|doc| doc.unwrap()).collect();
 
