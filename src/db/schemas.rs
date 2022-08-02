@@ -44,7 +44,6 @@ pub struct Community {
     orders_to_redeem: Option<f32>,
     dispute_channel: String,
     solvers: Vec<UsernameId>,
-    banned_users: Option<Vec<UsernameId>>,
     public: bool,
     currencies: Vec<String>,
     #[serde(serialize_with = "bson_datetime_as_rfc3339_string::serialize")]
@@ -70,54 +69,6 @@ pub struct User {
     lightning_address: Option<String>,
     disputes: Option<f32>,
     default_community_id: Option<String>,
-    #[serde(serialize_with = "bson_datetime_as_rfc3339_string::serialize")]
-    created_at: DateTime,
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub enum DisputeStatus {
-    #[serde(rename = "WAITING_FOR_SOLVER")]
-    WaitingForSolver,
-    #[serde(rename = "IN_PROGRESS")]
-    InProgress,
-    #[serde(rename = "SETTLED")]
-    Settled,
-    #[serde(rename = "SELLER_REFUNDED")]
-    SellerRefunded,
-    #[serde(rename = "RELEASED")]
-    Released,
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct Dispute {
-    #[serde(rename = "_id", serialize_with = "serialize_oid_as_string")]
-    id: ObjectId,
-    initiator: String,
-    seller_id: Option<String>,
-    buyer_id: Option<String>,
-    status: DisputeStatus,
-    community_id: Option<String>,
-    order_id: String,
-    solver_id: Option<String>,
-    #[serde(serialize_with = "bson_datetime_as_rfc3339_string::serialize")]
-    created_at: DateTime,
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct PendingPayment {
-    #[serde(rename = "_id", serialize_with = "serialize_oid_as_string")]
-    id: ObjectId,
-    description: String,
-    amount: f32,
-    attempts: f32,
-    paid: bool,
-    is_invoice_expired: bool,
-    payment_request: String,
-    hash: Option<String>,
-    paid_at: Option<DateTime>,
-    user_id: String,
-    order_id: Option<String>,
-    community_id: Option<String>,
     #[serde(serialize_with = "bson_datetime_as_rfc3339_string::serialize")]
     created_at: DateTime,
 }
@@ -177,10 +128,17 @@ pub struct Order {
     created_at: DateTime,
 }
 
+// Requests to be used by routes
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct OrderRequest {
     pub id: Option<String>,
     pub status: Option<OrderStatus>,
     pub direction: Option<String>,
     pub fiat_code: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct CommunityRequest {
+    pub id: Option<String>,
+    pub currency: Option<String>,
 }
