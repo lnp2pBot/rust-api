@@ -41,6 +41,7 @@ impl DBMongo {
 
     pub fn get_communities(&self, params: &CommunityRequest) -> Result<Vec<Community>, Error> {
         let mut filter = Document::new();
+        filter.insert("public", true);
         if let Some(id) = &params.id {
             let id = ObjectId::parse_str(id).unwrap();
             filter.insert("_id", id);
