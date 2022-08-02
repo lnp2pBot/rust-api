@@ -10,6 +10,8 @@ use crate::db::{
     schemas::{Community, Order},
 };
 
+use super::schemas::CommunityRequest;
+
 pub struct DBMongo {
     db: Database,
 }
@@ -37,10 +39,19 @@ impl DBMongo {
         Ok(comm.unwrap())
     }
 
-    pub fn get_communities(&self) -> Result<Vec<Community>, Error> {
+    pub fn get_communities(&self, params: &CommunityRequest) -> Result<Vec<Community>, Error> {
+        let mut filter = Document::new();
+        if let Some(id) = &params.id {
+            let id = ObjectId::parse_str(id).unwrap();
+            filter.insert("_id", id);
+        }
+        if let Some(code) = &params.currency {
+            filter.insert("currencies", code);
+        }
+
         let col = DBMongo::col::<Community>(&self, "communities");
         let cursors = col
-            .find(None, None)
+            .find(filter, None)
             .ok()
             .expect("Error getting communitites");
 
