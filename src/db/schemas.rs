@@ -122,8 +122,8 @@ pub struct Order {
     tg_chat_id: Option<String>,
     tg_order_message: Option<String>,
     tg_channel_message1: String,
-    price_from_api: bool,
-    price_margin: f32,
+    price_from_api: Option<bool>,
+    price_margin: Option<f32>,
     #[serde(serialize_with = "bson_datetime_as_rfc3339_string::serialize")]
     created_at: DateTime,
 }
