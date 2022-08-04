@@ -42,7 +42,7 @@ impl DBMongo {
     pub fn get_communities(&self, params: &CommunityRequest) -> Result<Vec<Community>, Error> {
         let mut filter = Document::new();
         filter.insert("public", true);
-        if let Some(id) = &params.id {
+        if let Some(id) = &params._id {
             let id = ObjectId::parse_str(id).unwrap();
             filter.insert("_id", id);
         }
@@ -76,7 +76,7 @@ impl DBMongo {
     pub fn get_orders(&self, params: &OrderRequest) -> Result<Vec<Order>, Error> {
         let mut filter = Document::new();
         filter.insert("status", bson::to_bson(&OrderStatus::Pending).unwrap());
-        if let Some(id) = &params.id {
+        if let Some(id) = &params._id {
             let id = ObjectId::parse_str(id).unwrap();
             filter.insert("_id", id);
         }

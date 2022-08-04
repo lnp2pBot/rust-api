@@ -21,7 +21,6 @@ pub enum ChannelType {
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct UsernameId {
-    id: String,
     username: String,
 }
 
@@ -29,13 +28,13 @@ pub struct UsernameId {
 pub struct OrderChannel {
     name: String,
     #[serde(rename = "type")]
-    kind: ChannelType,
+    channel_type: ChannelType,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Community {
-    #[serde(rename = "_id", serialize_with = "serialize_oid_as_string")]
-    id: ObjectId,
+    #[serde(serialize_with = "serialize_oid_as_string")]
+    _id: ObjectId,
     name: String,
     order_channels: Vec<OrderChannel>,
     group: String,
@@ -52,8 +51,8 @@ pub struct Community {
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct User {
-    #[serde(rename = "_id", serialize_with = "serialize_oid_as_string")]
-    id: ObjectId,
+    #[serde(serialize_with = "serialize_oid_as_string")]
+    _id: ObjectId,
     tg_id: String,
     username: String,
     lang: String,
@@ -105,8 +104,8 @@ pub enum OrderStatus {
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Order {
-    #[serde(rename = "_id", serialize_with = "serialize_oid_as_string")]
-    id: ObjectId,
+    #[serde(serialize_with = "serialize_oid_as_string")]
+    _id: ObjectId,
     description: String,
     amount: f32,
     fee: f32,
@@ -131,7 +130,7 @@ pub struct Order {
 // Requests to be used by routes
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct OrderRequest {
-    pub id: Option<String>,
+    pub _id: Option<String>,
     pub status: Option<OrderStatus>,
     pub direction: Option<String>,
     pub fiat_code: Option<String>,
@@ -139,6 +138,6 @@ pub struct OrderRequest {
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct CommunityRequest {
-    pub id: Option<String>,
+    pub _id: Option<String>,
     pub currency: Option<String>,
 }
