@@ -7,7 +7,7 @@ use std::io::Error;
 
 use crate::db::{
     self,
-    schemas::{Community, Order},
+    schemas::{Community, Order, OrderStatus},
 };
 
 use super::schemas::CommunityRequest;
@@ -75,13 +75,15 @@ impl DBMongo {
 
     pub fn get_orders(&self, params: &OrderRequest) -> Result<Vec<Order>, Error> {
         let mut filter = Document::new();
+        filter.insert("status", bson::to_bson(&OrderStatus::Pending).unwrap());
         if let Some(id) = &params.id {
             let id = ObjectId::parse_str(id).unwrap();
             filter.insert("_id", id);
         }
-        if let Some(status) = &params.status {
-            filter.insert("status", bson::to_bson(&status).unwrap());
-        }
+        // TODO: This can be uncommented only after having paginator
+        // if let Some(status) = &params.status {
+        //     filter.insert("status", bson::to_bson(&status).unwrap());
+        // }
         if let Some(d) = &params.direction {
             filter.insert("type", d);
         }
