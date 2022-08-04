@@ -123,6 +123,7 @@ pub struct Order {
     tg_channel_message1: String,
     price_from_api: Option<bool>,
     price_margin: Option<f32>,
+    community_id: Option<String>,
     #[serde(serialize_with = "bson_datetime_as_rfc3339_string::serialize")]
     created_at: DateTime,
 }
