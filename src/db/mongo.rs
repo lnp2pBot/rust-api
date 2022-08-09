@@ -87,8 +87,11 @@ impl DBMongo {
         if let Some(d) = &params.direction {
             filter.insert("type", d);
         }
-        if let Some(fiat) = &params.fiat_code {
+        if let Some(fiat) = &params.currency {
             filter.insert("fiat_code", fiat);
+        }
+        if let Some(community_id) = &params.community_id {
+            filter.insert("community_id", community_id);
         }
         let col = DBMongo::col::<Order>(&self, "orders");
         let cursors = col.find(filter, None).ok().expect("Error getting orders");

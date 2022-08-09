@@ -134,7 +134,8 @@ pub struct OrderRequest {
     pub _id: Option<String>,
     pub status: Option<OrderStatus>,
     pub direction: Option<String>,
-    pub fiat_code: Option<String>,
+    pub currency: Option<String>,
+    pub community_id: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
