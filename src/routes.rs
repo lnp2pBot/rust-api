@@ -17,11 +17,13 @@ pub fn index(_limitguard: RocketGovernor<RateLimitGuard>) -> &'static str {
     "Hello, world!"
 }
 
-#[get("/communities", format = "json", data = "<params>")]
+#[get("/communities?<_id>&<currency>")]
 pub fn get_communities(
     db: &State<DBMongo>,
-    params: Json<CommunityRequest>,
+    _id: Option<String>,
+    currency: Option<String>,
 ) -> Result<Json<Vec<Community>>, Status> {
+    let params = CommunityRequest { _id, currency };
     let comms = db.get_communities(&params);
 
     match comms {
@@ -50,11 +52,15 @@ pub fn get_order(db: &State<DBMongo>, id: &str) -> Result<Json<Order>, Status> {
     }
 }
 
-#[get("/orders", format = "json", data = "<params>")]
+#[get("/orders?<_id>&<direction>&<currency>&<community_id>")]
 pub fn get_orders(
     db: &State<DBMongo>,
-    params: Json<OrderRequest>,
+    _id: Option<String>,
+    direction: Option<String>,
+    currency: Option<String>,
+    community_id: Option<String>,
 ) -> Result<Json<Vec<Order>>, Status> {
+    let params = OrderRequest { _id, status: None, direction, currency, community_id };
     let orders = db.get_orders(&params);
 
     match orders {
