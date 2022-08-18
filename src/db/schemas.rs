@@ -115,6 +115,8 @@ pub struct Order {
     #[serde(rename = "type")]
     direction: String,
     fiat_amount: Option<f32>,
+    min_amount: Option<f32>,
+    max_amount: Option<f32>,
     fiat_code: String,
     payment_method: String,
     taken_at: Option<DateTime>,
