@@ -18,7 +18,5 @@ pub fn get_database() -> Database {
     // Get a handle to the deployment.
     // let client = Client::with_options(client_options).expect("Error getting db client");
 
-    let db = client.database(&database_name);
-
-    db
+    client.database(&database_name)
 }
