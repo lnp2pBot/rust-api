@@ -42,6 +42,7 @@ pub struct Community {
     earnings: Option<f32>,
     orders_to_redeem: Option<f32>,
     dispute_channel: String,
+    creator_id: String,
     solvers: Vec<UsernameId>,
     public: bool,
     currencies: Vec<String>,
@@ -53,21 +54,10 @@ pub struct Community {
 pub struct User {
     #[serde(serialize_with = "serialize_oid_as_string")]
     _id: ObjectId,
-    tg_id: String,
     username: String,
-    lang: String,
     trades_completed: f32,
     total_reviews: f32,
-    last_rating: f32,
     total_rating: f32,
-    volume_traded: f32,
-    admin: bool,
-    banned: bool,
-    show_username: bool,
-    show_volume_traded: bool,
-    lightning_address: Option<String>,
-    disputes: Option<f32>,
-    default_community_id: Option<String>,
     #[serde(serialize_with = "bson_datetime_as_rfc3339_string::serialize")]
     created_at: DateTime,
 }
