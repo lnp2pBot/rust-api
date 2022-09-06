@@ -34,9 +34,9 @@ pub fn get_communities(
 
 #[get("/user/<id>")]
 pub fn get_user(db: &State<DBMongo>, id: &str) -> Result<Json<User>, Status> {
-    let comm = db.get_user(id);
+    let user = db.get_user(id);
 
-    match comm {
+    match user {
         Ok(o) => Ok(Json(o)),
         Err(_) => Err(Status::InternalServerError),
     }
