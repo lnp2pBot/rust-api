@@ -35,30 +35,54 @@ pub fn get_communities(
 #[get("/user/<id>")]
 pub fn get_user(db: &State<DBMongo>, id: &str) -> Result<Json<User>, Status> {
     let user = db.get_user(id);
+    if user.is_err() {
+        return Err(Status::BadRequest)
+    }
 
     match user {
-        Ok(o) => Ok(Json(o)),
-        Err(_) => Err(Status::InternalServerError),
+        Ok(o) => {
+            match o {
+                Some(user) => Ok(Json(user)),
+                None => Err(Status::NotFound),
+            }
+        },
+        Err(_) => Err(Status::NotFound),
     }
 }
 
 #[get("/community/<id>")]
 pub fn get_community(db: &State<DBMongo>, id: &str) -> Result<Json<Community>, Status> {
     let comm = db.get_community(id);
+    if comm.is_err() {
+        return Err(Status::BadRequest)
+    }
 
     match comm {
-        Ok(o) => Ok(Json(o)),
-        Err(_) => Err(Status::InternalServerError),
+        Ok(o) => {
+            match o {
+                Some(comm) => Ok(Json(comm)),
+                None => Err(Status::NotFound),
+            }
+        },
+        Err(_) => Err(Status::NotFound),
     }
 }
 
 #[get("/order/<id>")]
 pub fn get_order(db: &State<DBMongo>, id: &str) -> Result<Json<Order>, Status> {
     let order = db.get_order(id);
+    if order.is_err() {
+        return Err(Status::BadRequest)
+    }
 
     match order {
-        Ok(o) => Ok(Json(o)),
-        Err(_) => Err(Status::InternalServerError),
+        Ok(o) => {
+            match o {
+                Some(order) => Ok(Json(order)),
+                None => Err(Status::NotFound),
+            }
+        },
+        Err(_) => Err(Status::NotFound),
     }
 }
 
@@ -83,4 +107,19 @@ pub fn get_orders(
         Ok(o) => Ok(Json(o)),
         Err(_) => Err(Status::InternalServerError),
     }
+}
+
+#[catch(400)]
+pub fn bad_request() -> String {
+    "Bad request".to_string()
+}
+
+#[catch(404)]
+pub fn not_found() -> String {
+    "We couldn't find what you are looking for".to_string()
+}
+
+#[catch(500)]
+pub fn server_error() -> String {
+    "Internal server error :(".to_string()
 }

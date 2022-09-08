@@ -13,7 +13,10 @@ use db::mongo::DBMongo;
 use rocket::fairing::{Fairing, Info, Kind};
 use rocket::http::Header;
 use rocket::{Request, Response};
-use routes::{get_communities, get_community, get_order, get_orders, get_user, index};
+use routes::{
+    bad_request, get_communities, get_community, get_order, get_orders, get_user, index, not_found,
+    server_error,
+};
 
 pub struct CORS;
 
@@ -42,17 +45,25 @@ async fn rocket() -> _ {
     let db = DBMongo::init();
     rocket::build()
         .manage(db)
+        .register(
+            "/",
+            catchers!(
+                not_found,
+                bad_request,
+                server_error,
+                rocket_governor_catcher
+            ),
+        )
         .mount(
             "/",
             routes![
                 index,
-                get_communities,
-                get_community,
-                get_orders,
+                get_user,
                 get_order,
-                get_user
+                get_orders,
+                get_community,
+                get_communities,
             ],
         )
-        .register("/", catchers!(rocket_governor_catcher))
         .attach(CORS)
 }

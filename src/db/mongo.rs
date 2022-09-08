@@ -3,7 +3,7 @@ use mongodb::{
     bson::{self, doc, oid::ObjectId, Document},
     sync::{Collection, Database},
 };
-use std::io::Error;
+use mongodb::bson::oid::Error;
 
 use crate::db::{
     self,
@@ -27,29 +27,29 @@ impl DBMongo {
         data_source.db.collection(collection_name)
     }
 
-    pub fn get_user(&self, id: &str) -> Result<User, Error> {
-        let id = ObjectId::parse_str(id).unwrap();
+    pub fn get_user(&self, id: &str) -> Result<Option<User>, Error> {
+        let id = ObjectId::parse_str(id)?;
         let filter = doc! {"_id": id };
         let col = DBMongo::col::<User>(self, "users");
-        let comm = col.find_one(filter, None).expect("Error getting user");
+        let user = col.find_one(filter, None).expect("Error getting user");
 
-        Ok(comm.unwrap())
+        Ok(user)
     }
 
-    pub fn get_community(&self, id: &str) -> Result<Community, Error> {
-        let id = ObjectId::parse_str(id).unwrap();
+    pub fn get_community(&self, id: &str) -> Result<Option<Community>, Error> {
+        let id = ObjectId::parse_str(id)?;
         let filter = doc! {"_id": id };
         let col = DBMongo::col::<Community>(self, "communities");
         let comm = col.find_one(filter, None).expect("Error getting community");
 
-        Ok(comm.unwrap())
+        Ok(comm)
     }
 
     pub fn get_communities(&self, params: &CommunityRequest) -> Result<Vec<Community>, Error> {
         let mut filter = Document::new();
         filter.insert("public", true);
         if let Some(id) = &params._id {
-            let id = ObjectId::parse_str(id).unwrap();
+            let id = ObjectId::parse_str(id)?;
             filter.insert("_id", id);
         }
         if let Some(code) = &params.currency {
@@ -64,13 +64,13 @@ impl DBMongo {
         Ok(comms)
     }
 
-    pub fn get_order(&self, id: &str) -> Result<Order, Error> {
-        let id = ObjectId::parse_str(id).unwrap();
+    pub fn get_order(&self, id: &str) -> Result<Option<Order>, Error> {
+        let id = ObjectId::parse_str(id)?;
         let filter = doc! {"_id": id };
         let col = DBMongo::col::<Order>(self, "orders");
         let order = col.find_one(filter, None).expect("Error getting order");
 
-        Ok(order.unwrap())
+        Ok(order)
     }
 
     pub fn get_orders(&self, params: &OrderRequest) -> Result<Vec<Order>, Error> {
