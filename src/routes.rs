@@ -40,13 +40,8 @@ pub fn get_user(db: &State<DBMongo>, id: &str) -> Result<Json<User>, Status> {
     }
 
     match user {
-        Ok(o) => {
-            match o {
-                Some(user) => Ok(Json(user)),
-                None => Err(Status::NotFound),
-            }
-        },
-        Err(_) => Err(Status::NotFound),
+        Ok(Some(u)) => Ok(Json(u)),
+        _ => Err(Status::NotFound),
     }
 }
 
@@ -58,13 +53,8 @@ pub fn get_community(db: &State<DBMongo>, id: &str) -> Result<Json<Community>, S
     }
 
     match comm {
-        Ok(o) => {
-            match o {
-                Some(comm) => Ok(Json(comm)),
-                None => Err(Status::NotFound),
-            }
-        },
-        Err(_) => Err(Status::NotFound),
+        Ok(Some(c)) => Ok(Json(c)),
+        _ => Err(Status::NotFound),
     }
 }
 
@@ -76,13 +66,8 @@ pub fn get_order(db: &State<DBMongo>, id: &str) -> Result<Json<Order>, Status> {
     }
 
     match order {
-        Ok(o) => {
-            match o {
-                Some(order) => Ok(Json(order)),
-                None => Err(Status::NotFound),
-            }
-        },
-        Err(_) => Err(Status::NotFound),
+        Ok(Some(o)) => Ok(Json(o)),
+        _ => Err(Status::NotFound),
     }
 }
 
