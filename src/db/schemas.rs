@@ -112,7 +112,7 @@ pub struct Order {
     taken_at: Option<DateTime>,
     tg_chat_id: Option<String>,
     tg_order_message: Option<String>,
-    tg_channel_message1: String,
+    pub tg_channel_message1: Option<String>,
     price_from_api: Option<bool>,
     price_margin: Option<f32>,
     community_id: Option<String>,
