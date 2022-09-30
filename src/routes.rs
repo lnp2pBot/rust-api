@@ -36,7 +36,7 @@ pub fn get_communities(
 pub fn get_user(db: &State<DBMongo>, id: &str) -> Result<Json<User>, Status> {
     let user = db.get_user(id);
     if user.is_err() {
-        return Err(Status::BadRequest)
+        return Err(Status::BadRequest);
     }
 
     match user {
@@ -49,7 +49,7 @@ pub fn get_user(db: &State<DBMongo>, id: &str) -> Result<Json<User>, Status> {
 pub fn get_community(db: &State<DBMongo>, id: &str) -> Result<Json<Community>, Status> {
     let comm = db.get_community(id);
     if comm.is_err() {
-        return Err(Status::BadRequest)
+        return Err(Status::BadRequest);
     }
 
     match comm {
@@ -62,7 +62,7 @@ pub fn get_community(db: &State<DBMongo>, id: &str) -> Result<Json<Community>, S
 pub fn get_order(db: &State<DBMongo>, id: &str) -> Result<Json<Order>, Status> {
     let order = db.get_order(id);
     if order.is_err() {
-        return Err(Status::BadRequest)
+        return Err(Status::BadRequest);
     }
 
     match order {

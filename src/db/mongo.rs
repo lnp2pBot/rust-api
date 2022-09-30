@@ -1,9 +1,9 @@
 use crate::db::schemas::OrderRequest;
+use mongodb::bson::oid::Error;
 use mongodb::{
     bson::{self, doc, oid::ObjectId, Document},
     sync::{Collection, Database},
 };
-use mongodb::bson::oid::Error;
 
 use crate::db::{
     self,
@@ -96,7 +96,11 @@ impl DBMongo {
         let col = DBMongo::col::<Order>(self, "orders");
         let cursors = col.find(filter, None).expect("Error getting orders");
 
-        let orders: Vec<Order> = cursors.map(|doc| doc.unwrap()).collect();
+        let orders: Vec<Order> = cursors
+            .map(|doc| doc.unwrap())
+            .into_iter()
+            .filter(|o| o.tg_channel_message1.is_some())
+            .collect();
 
         Ok(orders)
     }
