@@ -80,10 +80,6 @@ impl DBMongo {
             let id = ObjectId::parse_str(id).unwrap();
             filter.insert("_id", id);
         }
-        // TODO: This can be uncommented only after having paginator
-        // if let Some(status) = &params.status {
-        //     filter.insert("status", bson::to_bson(&status).unwrap());
-        // }
         if let Some(d) = &params.direction {
             filter.insert("type", d);
         }
