@@ -62,7 +62,7 @@ pub struct User {
     created_at: DateTime,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub enum OrderStatus {
     #[serde(rename = "WAITING_PAYMENT")]
     WaitingPayment,
@@ -95,36 +95,36 @@ pub enum OrderStatus {
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Order {
     #[serde(serialize_with = "serialize_oid_as_string")]
-    _id: ObjectId,
-    description: String,
-    amount: f32,
-    fee: f32,
-    bot_fee: Option<f32>,
-    community_fee: Option<f32>,
-    status: OrderStatus,
+    pub _id: ObjectId,
+    pub description: String,
+    pub amount: f32,
+    pub fee: f32,
+    pub bot_fee: Option<f32>,
+    pub community_fee: Option<f32>,
+    pub status: OrderStatus,
     #[serde(rename = "type")]
-    direction: String,
-    fiat_amount: Option<f32>,
-    min_amount: Option<f32>,
-    max_amount: Option<f32>,
-    fiat_code: String,
-    payment_method: String,
-    taken_at: Option<DateTime>,
-    tg_chat_id: Option<String>,
-    tg_order_message: Option<String>,
+    pub direction: String,
+    pub fiat_amount: Option<f32>,
+    pub min_amount: Option<f32>,
+    pub max_amount: Option<f32>,
+    pub fiat_code: String,
+    pub payment_method: String,
+    pub taken_at: Option<DateTime>,
+    pub tg_chat_id: Option<String>,
+    pub tg_order_message: Option<String>,
     pub tg_channel_message1: Option<String>,
-    price_from_api: Option<bool>,
-    price_margin: Option<f32>,
-    community_id: Option<String>,
+    pub price_from_api: Option<bool>,
+    pub price_margin: Option<f32>,
+    pub community_id: Option<String>,
     #[serde(serialize_with = "bson_datetime_as_rfc3339_string::serialize")]
-    created_at: DateTime,
+    pub created_at: DateTime,
 }
 
 // Requests to be used by routes
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct OrderRequest {
     pub _id: Option<String>,
-    pub status: Option<OrderStatus>,
+    pub status: Option<String>,
     pub direction: Option<String>,
     pub currency: Option<String>,
     pub community_id: Option<String>,
