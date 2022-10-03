@@ -3,6 +3,7 @@ use bson::datetime::DateTime;
 use mongodb::bson::oid::Error;
 use mongodb::{
     bson::{self, doc, oid::ObjectId, Document},
+    options::FindOptions,
     sync::{Collection, Database},
 };
 
@@ -91,7 +92,10 @@ impl DBMongo {
             filter.insert("community_id", community_id);
         }
         let col = DBMongo::col::<Order>(self, "orders");
-        let cursor = col.find(filter, None).expect("Error getting orders");
+        let options = FindOptions::builder()
+            .sort(doc! { "created_at": -1 })
+            .build();
+        let cursor = col.find(filter, options).expect("Error getting orders");
 
         let orders: Vec<Order> = cursor
             .map(|doc| doc.unwrap())
