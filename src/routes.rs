@@ -1,5 +1,8 @@
 use crate::db::mongo::DBMongo;
-use crate::db::schemas::{Community, CommunityRequest, Order, OrderRequest, User};
+use crate::db::schemas::{
+    Community, CommunityRequest, Order, OrderRequest, OrdersStatsRequest, User,
+};
+use mongodb::bson::Document;
 use rocket::*;
 use rocket::{http::Status, serde::json::Json, State};
 use rocket_governor::{Method, Quota, RocketGovernable, RocketGovernor};
@@ -89,6 +92,30 @@ pub fn get_orders(
     let orders = db.get_orders(&params);
 
     match orders {
+        Ok(o) => Ok(Json(o)),
+        Err(_) => Err(Status::InternalServerError),
+    }
+}
+
+#[get("/orders_stats?<direction>&<community_id>&<date_from>&<date_to>&<status>")]
+pub fn get_orders_stats(
+    db: &State<DBMongo>,
+    direction: Option<String>,
+    community_id: Option<String>,
+    date_from: Option<String>,
+    date_to: Option<String>,
+    status: Option<String>,
+) -> Result<Json<Vec<Document>>, Status> {
+    let params = OrdersStatsRequest {
+        date_from,
+        date_to,
+        status,
+        direction,
+        community_id,
+    };
+    let stats = db.get_orders_stats(&params);
+
+    match stats {
         Ok(o) => Ok(Json(o)),
         Err(_) => Err(Status::InternalServerError),
     }

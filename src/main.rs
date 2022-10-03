@@ -14,8 +14,8 @@ use rocket::fairing::{Fairing, Info, Kind};
 use rocket::http::Header;
 use rocket::{Request, Response};
 use routes::{
-    bad_request, get_communities, get_community, get_order, get_orders, get_user, index, not_found,
-    server_error,
+    bad_request, get_communities, get_community, get_order, get_orders, get_orders_stats, get_user,
+    index, not_found, server_error,
 };
 
 pub struct CORS;
@@ -63,6 +63,7 @@ async fn rocket() -> _ {
                 get_orders,
                 get_community,
                 get_communities,
+                get_orders_stats,
             ],
         )
         .attach(CORS)
