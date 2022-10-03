@@ -1,4 +1,5 @@
-use crate::db::schemas::OrderRequest;
+use crate::db::schemas::{OrderRequest, OrdersStatsRequest};
+use bson::datetime::DateTime;
 use mongodb::bson::oid::Error;
 use mongodb::{
     bson::{self, doc, oid::ObjectId, Document},
@@ -57,9 +58,9 @@ impl DBMongo {
         }
 
         let col = DBMongo::col::<Community>(self, "communities");
-        let cursors = col.find(filter, None).expect("Error getting communitites");
+        let cursor = col.find(filter, None).expect("Error getting communitites");
 
-        let comms: Vec<Community> = cursors.map(|doc| doc.unwrap()).collect();
+        let comms: Vec<Community> = cursor.map(|doc| doc.unwrap()).collect();
 
         Ok(comms)
     }
@@ -90,13 +91,49 @@ impl DBMongo {
             filter.insert("community_id", community_id);
         }
         let col = DBMongo::col::<Order>(self, "orders");
-        let cursors = col.find(filter, None).expect("Error getting orders");
+        let cursor = col.find(filter, None).expect("Error getting orders");
 
-        let orders: Vec<Order> = cursors
+        let orders: Vec<Order> = cursor
             .map(|doc| doc.unwrap())
             .into_iter()
             .filter(|o| o.tg_channel_message1.is_some())
             .collect();
+
+        Ok(orders)
+    }
+
+    pub fn get_orders_stats(&self, params: &OrdersStatsRequest) -> Result<Vec<Document>, Error> {
+        let mut filter = Document::new();
+        let mut match_content = Document::new();
+
+        if let Some(status) = &params.status {
+            match_content.insert("status", status);
+        }
+        if let Some(date_from) = &params.date_from {
+            let from = DateTime::parse_rfc3339_str(date_from).unwrap_or_else(|_| DateTime::now());
+            match_content.insert("created_at", doc! { "$gte": from });
+        }
+        if let Some(date_to) = &params.date_to {
+            let to = DateTime::parse_rfc3339_str(date_to).unwrap_or_else(|_| DateTime::now());
+            match_content.insert("created_at", doc! { "$lte": to });
+        }
+        filter.insert("$match", match_content);
+        let group = doc! {
+            "$group": {
+                "_id": "$fiat_code",
+                "orders": { "$sum": 1 },
+                "amount": { "$sum": "$amount" },
+            },
+        };
+        let sort = doc! {
+            "$sort": { "orders": -1 },
+        };
+        let pipeline = vec![filter, group, sort];
+        let col = DBMongo::col::<Order>(self, "orders");
+        let cursor = col
+            .aggregate(pipeline, None)
+            .expect("Error getting order stats");
+        let orders: Vec<Document> = cursor.map(|doc| doc.unwrap()).collect();
 
         Ok(orders)
     }
