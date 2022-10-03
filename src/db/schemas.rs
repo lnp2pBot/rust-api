@@ -135,3 +135,12 @@ pub struct CommunityRequest {
     pub _id: Option<String>,
     pub currency: Option<String>,
 }
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct OrdersStatsRequest {
+    pub date_from: Option<String>,
+    pub date_to: Option<String>,
+    pub status: Option<String>,
+    pub direction: Option<String>,
+    pub community_id: Option<String>,
+}
