@@ -116,6 +116,7 @@ pub struct Order {
     pub price_from_api: Option<bool>,
     pub price_margin: Option<f32>,
     pub community_id: Option<String>,
+    pub is_public: bool,
     #[serde(serialize_with = "bson_datetime_as_rfc3339_string::serialize")]
     pub created_at: DateTime,
 }

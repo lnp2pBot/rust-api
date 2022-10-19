@@ -77,7 +77,9 @@ impl DBMongo {
 
     pub fn get_orders(&self, params: &OrderRequest) -> Result<Vec<Order>, Error> {
         let mut filter = Document::new();
+        // Only return PENDING and public orders
         filter.insert("status", bson::to_bson(&OrderStatus::Pending).unwrap());
+        filter.insert("is_public", true);
         if let Some(id) = &params._id {
             let id = ObjectId::parse_str(id).unwrap();
             filter.insert("_id", id);
