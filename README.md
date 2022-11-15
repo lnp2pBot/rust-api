@@ -32,5 +32,21 @@ Go to http://localhost:8000
 With curl:
 
 ```
-$ curl -X GET -H "Content-type: application/json" -d '{}' "http://localhost:8000/orders"
+# All pending orders
+$ curl -X GET "http://localhost:8000/orders" | jq
+# you can send optional arguments
+$ curl -X GET "http://localhost:8000/orders?_id=<_id>&direction=<direction>&currency=<currency>&community_id=<community_id>" | jq
+# example to get all pending orders with fiat = ARS
+$ curl -X GET "http://localhost:8000/orders?currency=ARS" | jq
+# All communities
+$ curl -X GET "http://localhost:8000/communities" | jq
+# you can send optional arguments
+$ curl -X GET "http://localhost:8000/communities?_id=<_id>&currency=<currency>" | jq
+# example to get all communities that works with fiat = EUR
+$ curl -X GET "http://localhost:8000/communities?currency=EUR" | jq
+# Order stats
+$ curl -X GET "http://localhost:8000/orders?direction=<direction>&community_id=<community_id>&date_from=<date_from>&date_to=<date_to>&status=<status>" | jq
+# Example to get stats of all buy success orders from 2021-10-01 to 2021-10-31
+$ curl -X GET "http://localhost:8000/orders?direction=buy&date_from=2021-10-01&date_to=2021-10-31&status=SUCCESS" | jq
+
 ```
