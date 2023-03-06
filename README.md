@@ -18,6 +18,15 @@ $ cp .env-sample .env
 
 To connect with a mongodb server we need to set 2 variables in the `.env` file, `DATABASE_URL` and `DATABASE_NAME`.
 
+## Install dependencies
+
+To compile on Ubuntu/Pop!\_OS, you need to install some dependencies, run the following commands:
+
+```
+$ sudo apt update
+$ sudo apt install -y cmake
+```
+
 ## Compile and execute it:
 
 To compile on Ubuntu/Pop!\_OS, please install [cargo](https://www.rust-lang.org/tools/install), then run the following commands:
